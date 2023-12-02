@@ -20,10 +20,12 @@ const User = mongoose.model('User', {
 })
 
 // One-way encryption
-const saltRounds = 10; // You can adjust the number of salt rounds based on your security requirements
+const saltRounds = 10;
 const password = "foobar";
 const salt = bcrypt.genSaltSync(saltRounds);
 const hashedPassword = bcrypt.hashSync(password, salt);
+
+console.log("Hashed Password:", hashedPassword); // Log hashed password to console
 
 const user = new User({ name: "Bob", password: hashedPassword });
 user.save();
@@ -36,12 +38,6 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello Technigo!");
-});
-
-// Endpoint to log hashed password
-app.get("/hashed-password", (req, res) => {
-  console.log("Hashed Password:", hashedPassword);
-  res.send("Check the console for the hashed password");
 });
 
 app.listen(port, () => {
