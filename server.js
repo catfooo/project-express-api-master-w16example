@@ -19,40 +19,36 @@ const User = mongoose.model('User', {
   }
 });
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/yourdatabase', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => {
-    // Hash the password
-    const hashedPassword = bcrypt.hashSync("foobar", 10);
+// One-way encryption
+const user = new User({name: "Bob", password: bcrypt.hashSync("foobar")});
+user.save();
 
-    // Create a new user with the hashed password
-    const user = new User({ name: "Bob", password: hashedPassword });
+// If you're using one of our datasets, uncomment the appropriate import below
+// to get started!
+// import avocadoSalesData from "./data/avocado-sales.json";
+// import booksData from "./data/books.json";
+// import goldenGlobesData from "./data/golden-globes.json";
+// import netflixData from "./data/netflix-titles.json";
+// import topMusicData from "./data/top-music.json";
 
-    // Save the user to the database
-    return user.save();
-  })
-  .then(() => {
-    // Set up Express app
-    const port = process.env.PORT || 8080;
-    const app = express();
+// Defines the port the app will run on. Defaults to 8080, but can be overridden
+// when starting the server. Example command to overwrite PORT env variable value:
+// PORT=9000 npm start
+const port = process.env.PORT || 8080;
+const app = express();
 
-    app.use(cors());
-    app.use(express.json());
+// Add middlewares to enable cors and json body parsing
+app.use(cors());
+app.use(express.json());
 
-    app.get("/", (req, res) => {
-      res.send("Hello Technigo!");
-    });
+// Start defining your routes here
+app.get("/", (req, res) => {
+  res.send("Hello Technigo!");
+});
 
-    app.listen(port, () => {
-      console.log(`Server running on http://localhost:${port}`);
-    });
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
 
-    // This will be executed after the server starts listening
-    console.log(bcrypt.hashSync("foobar"));
-  })
-  .catch((error) => {
-    console.error("Error during initialization:", error);
-  });
+console.log(bcrypt.hashSync("foobar"));
