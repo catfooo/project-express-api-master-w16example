@@ -49,9 +49,10 @@ mongoose.connect('mongodb://localhost:27017/yourdatabase', {
     app.listen(port, () => {
       console.log(`Server running on http://localhost:${port}`);
     });
+
+    // This will be executed after the server starts listening
+    console.log(bcrypt.hashSync("foobar"));
   })
   .catch((error) => {
     console.error("Error during initialization:", error);
   });
-
-console.log(bcrypt.hashSync("foobar"))  
