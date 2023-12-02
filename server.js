@@ -1,5 +1,27 @@
 import express from "express";
 import cors from "cors";
+import crypto from 'crypto'
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
+
+const User = mongoose.model('User', {
+  name:{
+    type: String,
+    unique: true
+  },
+  password:{
+    type: String,
+    required: true
+  },
+  accessToken:{
+    type: String,
+    default: () => crypto.randomBytes(128).toString('hex')
+  }
+})
+
+// One-way encryption
+const user = new User({name: "Bob", password: bcrypt.hashSync("foobar")})
+user.save()
 
 // If you're using one of our datasets, uncomment the appropriate import below
 // to get started!
@@ -28,3 +50,5 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
+console.log(bcrypt.hashSync("foobar"))
