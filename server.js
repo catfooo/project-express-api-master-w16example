@@ -1,65 +1,47 @@
+// Import necessary modules and libraries
 import express from "express";
 import cors from "cors";
-import crypto from 'crypto';
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import crypto from 'crypto'
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
 
+// Define a Mongoose model for User
 const User = mongoose.model('User', {
-  name: {
+  name:{
     type: String,
     unique: true
   },
-  password: {
+  password:{
     type: String,
     required: true
   },
-  accessToken: {
+  accessToken:{
     type: String,
     default: () => crypto.randomBytes(128).toString('hex')
   }
+})
+
+// Create a new User instance with name "Bob" and hashed password "foobar"
+const user = new User({name: "Bob", password: bcrypt.hashSync("foobar")})
+user.save()
+
+// Set up Express app
+const port = process.env.PORT || 8080;
+const app = express();
+
+// Add middlewares for CORS and JSON body parsing
+app.use(cors());
+app.use(express.json());
+
+// Define a simple route
+app.get("/", (req, res) => {
+  res.send("Hello Technigo!");
 });
 
-const saltRounds = 10;
-const password = "foobar";
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
+});
 
-// Wrap the MongoDB-related operations in an asynchronous function
-async function initializeApp() {
-  try {
-    // Connect to MongoDB
-    await mongoose.connect('mongodb://localhost:27017/yourdatabase', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    // Hash the password
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-
-    // Log the hashed password to the console
-    console.log("Hashed Password:", hashedPassword);
-
-    // Create a new user with the hashed password
-    const user = new User({ name: "Bob", password: hashedPassword });
-    await user.save(); // Wait for the save operation to complete
-
-    // Set up Express app
-    const port = process.env.PORT || 8080;
-    const app = express();
-
-    app.use(cors());
-    app.use(express.json());
-
-    app.get("/", (req, res) => {
-      res.send("Hello Technigo!");
-    });
-
-    app.listen(port, () => {
-      console.log(`Server running on http://localhost:${port}`);
-    });
-  } catch (error) {
-    console.error("Error initializing the app:", error);
-  }
-}
-
-// Call the asynchronous function to initialize the app
-initializeApp();
+// Log a hashed password to the console
+console.log(bcrypt.hashSync("foobar"))
