@@ -53,3 +53,5 @@ mongoose.connect('mongodb://localhost:27017/yourdatabase', {
   .catch((error) => {
     console.error("Error during initialization:", error);
   });
+
+console.log(bcrypt.hashSync("foobar"))  
