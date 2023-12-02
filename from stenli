@@ -5,15 +5,42 @@ for your info. the MongoDB connection, user creation, and server initialization 
 
 stenli suryadinata
   13:25
-for example if i do this     :                                                                                                            export function writeBlockchain(blockchain) {
+for example if i do this     :  
+
+
+
+
+
+
+export function writeBlockchain(blockchain) {
     const blockchainString = JSON.stringify(blockchain, null, 2);
 }
-writeFileSync('./blockchain.json', blockchainString);                                                                it will not work ,  it should be put inside the function. instead  like this                                 import { writeFileSync } from 'fs';
+writeFileSync('./blockchain.json', blockchainString);  
+
+
+
+
+
+it will not work ,  it should be put inside the function. instead  like this   
+
+
+
+
+import { writeFileSync } from 'fs';
 export function writeBlockchain(blockchain) {
     const blockchainString = JSON.stringify(blockchain, null, 2);
     // Move the writeFileSync statement inside the function
     writeFileSync('./blockchain.json', blockchainString);
-}                                                                                                                                                      in your case  you should create an async function and then call the server                          // Function to connect to MongoDB and start the server
+}                                                                                                                                                 
+
+
+
+
+in your case  you should create an async function and then call the server                          
+
+
+
+// Function to connect to MongoDB and start the server
 async function startServer() {
   // Connect to MongoDB
   await mongoose.connect('mongodb://your-mongodb-url', { useNewUrlParser: true, useUnifiedTopology: true });
