@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import crypto from 'crypto'
-import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
+import crypto from 'crypto';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const User = mongoose.model('User', {
   name: {
@@ -17,29 +17,49 @@ const User = mongoose.model('User', {
     type: String,
     default: () => crypto.randomBytes(128).toString('hex')
   }
-})
+});
 
-// One-way encryption
 const saltRounds = 10;
 const password = "foobar";
-const salt = bcrypt.genSaltSync(saltRounds);
-const hashedPassword = bcrypt.hashSync(password, salt);
 
-console.log("Hashed Password:", hashedPassword); // Log hashed password to console
+// Wrap the MongoDB-related operations in an asynchronous function
+async function initializeApp() {
+  try {
+    // Connect to MongoDB
+    await mongoose.connect('mongodb://localhost:27017/yourdatabase', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-const user = new User({ name: "Bob", password: hashedPassword });
-user.save();
+    // Hash the password
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
-const port = process.env.PORT || 8080;
-const app = express();
+    // Log the hashed password to the console
+    console.log("Hashed Password:", hashedPassword);
 
-app.use(cors());
-app.use(express.json());
+    // Create a new user with the hashed password
+    const user = new User({ name: "Bob", password: hashedPassword });
+    await user.save(); // Wait for the save operation to complete
 
-app.get("/", (req, res) => {
-  res.send("Hello Technigo!");
-});
+    // Set up Express app
+    const port = process.env.PORT || 8080;
+    const app = express();
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+    app.use(cors());
+    app.use(express.json());
+
+    app.get("/", (req, res) => {
+      res.send("Hello Technigo!");
+    });
+
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error("Error initializing the app:", error);
+  }
+}
+
+// Call the asynchronous function to initialize the app
+initializeApp();
