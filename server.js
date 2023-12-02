@@ -51,9 +51,4 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
-
-try {
-  console.log(bcrypt.hashSync("foobar"));
-} catch (error) {
-  console.error("Error generating hash:", error);
-}
+console.log(bcrypt.hashSync("foobar"));
