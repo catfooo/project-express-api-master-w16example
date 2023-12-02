@@ -51,4 +51,5 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
-console.log(bcrypt.hashSync("foobar"));
+const saltRounds = 10
+console.log(bcrypt.hashSync("foobar", saltRounds));
