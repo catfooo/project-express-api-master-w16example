@@ -1,0 +1,39 @@
+stenli suryadinata
+  13:17
+for your info. the MongoDB connection, user creation, and server initialization are wrapped in an asynchronous startServer function.
+
+
+stenli suryadinata
+  13:25
+for example if i do this     :                                                                                                            export function writeBlockchain(blockchain) {
+    const blockchainString = JSON.stringify(blockchain, null, 2);
+}
+writeFileSync('./blockchain.json', blockchainString);                                                                it will not work ,  it should be put inside the function. instead  like this                                 import { writeFileSync } from 'fs';
+export function writeBlockchain(blockchain) {
+    const blockchainString = JSON.stringify(blockchain, null, 2);
+    // Move the writeFileSync statement inside the function
+    writeFileSync('./blockchain.json', blockchainString);
+}                                                                                                                                                      in your case  you should create an async function and then call the server                          // Function to connect to MongoDB and start the server
+async function startServer() {
+  // Connect to MongoDB
+  await mongoose.connect('mongodb://your-mongodb-url', { useNewUrlParser: true, useUnifiedTopology: true });
+  // Create a user and save to the database
+  const user = new User({ name: "Bob", password: bcrypt.hashSync("foobar") });
+  await user.save();
+  // Create Express app
+  const app = express();
+  // Add middlewares to enable cors and json body parsing
+  app.use(cors());
+  app.use(express.json());
+  // Define routes
+  app.get("/", (req, res) => {
+    res.send("Hello Technigo!");
+  });
+  // Start the server
+  const port = process.env.PORT || 8080;
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+}
+// Call the function to start the server
+startServer();
