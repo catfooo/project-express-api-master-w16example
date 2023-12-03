@@ -51,4 +51,4 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
-console.log(bcrypt.hashSync("foobar"));
+console.log(bcrypt.hashSync("foobar", 0));
