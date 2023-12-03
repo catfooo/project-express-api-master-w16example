@@ -3,6 +3,7 @@ import cors from "cors";
 import crypto from 'crypto';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+
 const User = mongoose.model('User', {
   name: {
     type: String,
@@ -18,11 +19,11 @@ const User = mongoose.model('User', {
   }
 });
 
-// manually specify a salt
-const salt = 0 // adjust this if you want
+// Manually specify a salt
+const salt = 'yourmanuallyspecifiedsalt'; // Replace with your own salt
 
 // One-way encryption
-const user = new User({name: "Bob", password: bcrypt.hashSync("foobar")});
+const user = new User({name: "Bob", password: bcrypt.hashSync("foobar", salt)});
 user.save();
 
 // If you're using one of our datasets, uncomment the appropriate import below
