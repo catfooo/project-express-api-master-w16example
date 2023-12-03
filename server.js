@@ -18,6 +18,8 @@ const User = mongoose.model('User', {
   }
 });
 
+// manually specify a salt
+const salt = bcrypt.genSaltSync(0) // adjust this if you want
 
 // One-way encryption
 const user = new User({name: "Bob", password: bcrypt.hashSync("foobar")});
