@@ -25,7 +25,14 @@ const salt = bcrypt.genSaltSync(saltRounds);
 
 // One-way encryption
 const user = new User({name: "Bob", password: bcrypt.hashSync("foobar", salt)});
-user.save();
+user.save({ w: 1, timeout: 10000 }, function(err, doc) {
+  // Your save callback logic here
+  if (err) {
+    console.error("Error saving user:", err);
+  } else {
+    console.log("User saved successfully:", doc);
+  }
+});
 
 // If you're using one of our datasets, uncomment the appropriate import below
 // to get started!
