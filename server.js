@@ -1,49 +1,33 @@
 import express from "express";
 import cors from "cors";
-import crypto from 'crypto';
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import crypto from 'crypto'
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt-nodejs'
 
 const User = mongoose.model('User', {
-  name: {
+  name:{
     type: String,
     unique: true
   },
-  password: {
+  password:{
     type: String,
     required: true
   },
-  accessToken: {
+  accessToken:{
     type: String,
     default: () => crypto.randomBytes(128).toString('hex')
   }
-});
+})
 
-// Generate a valid salt using bcrypt.genSaltSync
-// const saltRounds = 10; // You can adjust this value
-// const salt = bcrypt.genSaltSync(saltRounds);
-const salt = bcrypt.genSaltSync(0);
-
-// One-way encryption
-// it crashes app if i remove .then and .catch, 
-// but in video the teacher dont have this. do i need this?
-// added salt after hashsync foobar 
-const user = new User({name: "Bob", password: bcrypt.hashSync("foobar", salt)});
+// one-way encryption
+const user = new User({name: "Bob", password: bcrypt.hashSync("foobar")})
 user.save()
   .then((doc) => {
     console.log("User saved successfully:", doc);
   })
   .catch((err) => {
     console.error("Error saving user:", err);
-  });
-
-// If you're using one of our datasets, uncomment the appropriate import below
-// to get started!
-// import avocadoSalesData from "./data/avocado-sales.json";
-// import booksData from "./data/books.json";
-// import goldenGlobesData from "./data/golden-globes.json";
-// import netflixData from "./data/netflix-titles.json";
-// import topMusicData from "./data/top-music.json";
+  })
 
 // Defines the port the app will run on. Defaults to 8080, but can be overridden
 // when starting the server. Example command to overwrite PORT env variable value:
@@ -65,4 +49,4 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
-console.log(bcrypt.hashSync("foobar", salt));
+console.log(bcrypt.hashSync("foobar"))
