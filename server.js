@@ -20,12 +20,14 @@ const User = mongoose.model('User', {
 });
 
 // Generate a valid salt using bcrypt.genSaltSync
-const saltRounds = 10; // You can adjust this value
-const salt = bcrypt.genSaltSync(saltRounds);
+// const saltRounds = 10; // You can adjust this value
+// const salt = bcrypt.genSaltSync(saltRounds);
+const salt = bcrypt.genSaltSync(0);
 
 // One-way encryption
 // it crashes app if i remove .then and .catch, 
 // but in video the teacher dont have this. do i need this?
+// added salt after hashsync foobar 
 const user = new User({name: "Bob", password: bcrypt.hashSync("foobar", salt)});
 user.save()
   .then((doc) => {
